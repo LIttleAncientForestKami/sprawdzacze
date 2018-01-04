@@ -1,3 +1,6 @@
+# GitHub token shall not pass
+exportToken.sh
+
 # Created by https://www.gitignore.io/api/vim
 
 ### Vim ###
