@@ -14,14 +14,19 @@ komcie-do-csv() {
     ghcurl "$(jq -r ._links.review_comments.href < recka"$NR".json)" > komcie"$NR".json
 ### Statsy główne - kto - co - kiedy - gdzie
 
-    jq -r -c ".[] | [.user.login, .body, .created_at, .html_url] | @csv" < komcie"$NR".json > komcie"$NR".csv
-    cat < komcie-linia.1wsza - komcie"$NR".csv | sponge komcie"$NR".csv
+    jq -r -c '.[] | ["k", .user.login, .body, .created_at, .html_url] | @csv' < komcie"$NR".json >> komcie"$NR".csv
+    cat < 1wszaLiniaKomci - komcie"$NR".csv | sponge komcie"$NR".csv
 }
 
+uwagi-do-recki() {
+    ghcurl "$(jq -r ._links.comments.href < recka"$NR".json)" > uwagi"$NR".json
+    jq -r -c '.[] | ["u", .user.login, .body, .created_at, .html_url] | @csv' < uwagi"$NR".json >> komcie"$NR".csv
+    cat < 1wszaLiniaKomci - komcie"$NR".csv | sponge komcie"$NR".csv
+}
 ## Wyciągnij recki
 
-
 ghcurl https://api.github.com/repos/szczepanskikrs/Battleships/pulls/"$NR" > recka"$NR".json
+touch komcie"$NR".json
 
 ## Wyciągnij komcie jak jest co
 
@@ -35,5 +40,6 @@ then
 elif [ "$IL_UWAG" -gt 0 ]
 then
     echo Komcie są nie tylko w recce! "$IL_KOMCI", "$IL_UWAG"
+    uwagi-do-recki
 fi
 echo Recka "$NR", uwag "$IL_UWAG", komci "$IL_KOMCI"
