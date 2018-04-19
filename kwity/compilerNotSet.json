@@ -1,0 +1,4 @@
+{
+    "title": "Maven compiler plug-in by default is set to old Java",
+    "body": "Please set it to current one, for both source and target"
+}
