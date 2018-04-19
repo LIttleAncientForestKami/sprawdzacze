@@ -1,0 +1,4 @@
+{
+  "title": "No readme.md file found",
+  "body": "Not having `reamde.md` is fine for small-time projects, where one-line description suffices, but it's not a good habit. Run instructions are most meaningful to have as well as short project description with sometimes references, thanks, license info etc. See GitHub Markdown reference for good formatting tips."
+}

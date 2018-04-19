@@ -1,0 +1,4 @@
+{
+    "title": "Maven plug-ins should have their versions set.",
+    "body": "In `<properties>`, better than in `<dependencies>`. It's a good habit and it allows you to NOT have Maven use outdated versions (the default)."
+}

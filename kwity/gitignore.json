@@ -1,0 +1,4 @@
+{
+  "title": "Found trash files in repository. Do you have a .gitignore?",
+  "body": "Not having `.gitignore` means you may commit files you don't want to, like `.class`, `.swp`, `.iml` or folders containing these, like `/.idea` or `/target`. Having `.gitignore` means, that you have created it LATER then those files were committed. Committed files are tracked, so you need to tell Git to stop tracking them so your `.gitignore` could work."
+}

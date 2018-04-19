@@ -1,0 +1,4 @@
+{
+    "title": "Maven launch failed!",
+    "body": "I usually launch `mvn clean install`, then followed by attempt to run from command line, via `java -jar target/projectName.jar`. Something failed in this sequence."
+}

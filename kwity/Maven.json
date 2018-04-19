@@ -1,0 +1,4 @@
+{
+    "title": "Maven coordinates issue or basic project info lacking",
+    "body": "Check your group, artifact ID and version. Also, look at name, site and description. If any are missing, add please. Remember: group should be a reversed main package and a DNS name you control (preferably). Site should point to it. Name may be longer, artifact ID usually is a dumbed-down form of a name, shortened as necessary. Description is a one-liner explaining what your project is. Snapshot versions may be bad at times (when do you plan to have nearest non-snapshot version?)."
+}
