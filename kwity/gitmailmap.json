@@ -1,0 +1,4 @@
+{
+  "title": "No .mailmap?",
+  "body": "This may be a non-issue if you commit from one computer or are disciplined enough to have same git config user section (user name and email). Otherwise, this will make some checks difficuly, as Jan Nowak can be two different authors if his user name or email are different. Run `git check-mailmap --stdin < .mailmap` in top-dir of your repo (if you have a `.mailmap` file there of course)  or `git help shortlog` (look under MAPPING AUTHORS for more)."
+}

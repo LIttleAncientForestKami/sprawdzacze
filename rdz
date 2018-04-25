@@ -1,0 +1,12 @@
+klonowanie repozytoriów z rozpoznaniem (mapowanie)
+    lista repo
+    klon po liście
+    ksywa - nazwisko
+    projekt - nazwa
+    git clone github/ksywa/repo nazwisko_nazwa
+    katalog gdzie mają siedzieć ich projekty bym sobie z innymi porównać
+odpalanie w danym repo obsługuje właśnie to repo
+funkcje pomocnicze do .bashrc i .zshrc albo po prostu .mojeFunkcje i wrzuć je tam
+todo
+punktacja in plus?
+punktacja nie w kwitach przypadkiem?
