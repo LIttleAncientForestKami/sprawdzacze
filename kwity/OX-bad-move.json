@@ -1,0 +1,4 @@
+{
+    "title": "Bad or illegal move possible or mishandled",
+    "body": "Illegal move should not be possible but it should not penalize the player"
+}

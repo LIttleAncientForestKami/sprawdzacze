@@ -1,0 +1,4 @@
+{
+    "title": "Nice Git story... not really",
+    "body": "Git should tell a project story, yours does NOT :( Too little commits, too often your messages are repeated, or just plain unclear. Not only I can't really say what you were doing, I can't tell WHY you were doing it. Consider if some of your branches shouldn't been squashed before merging them to master"
+}

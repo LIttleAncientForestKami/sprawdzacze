@@ -8,26 +8,26 @@ die() { yell "Dying (111): $*"; exit 111; }
 try() { "$@" || die "cannot $*"; }
 
 WYNIK=""
-#cd ../TDD_5ed
-cd testowe
-#git clone https://github.com/Hoymm/TDD Damian_Muca_TDD
-#git clone https://github.com/tomeks86/kent_beck_tdd Tomek_Seidler_TDD
-#git clone https://github.com/xKoem/TDD Bartek_Kosmider_TDD
-#git clone https://github.com/AdrianHarenczyk/TestDrivenDevelopment Adrian_Hareńczyk_TDD
-#git clone https://github.com/totine/epam-java-academy--beck-tdd-the-money-example Joanna_Gargas_TDD
-#git clone https://github.com/JaroslawSlaby/TDD_Beck Jarosław_Słaby_TDD
-#git clone https://github.com/KrzysztofDzioba/tdd_beck Krzysztof_Dzioba_TDD
-#git clone https://github.com/boczkas/TDD-Currency Przemysław_Jakubowski_TDD
-
 
 function znajdź {
     find . -iname "$1"
 }
 
-function kwit {
+function kwit_nieszablonowy {
+    yell "Kwit $1 za $2"
+    WYNIK="$WYNIK \"$3\" za $1"
+    kwit "$1" "$2"
+}
+
+function kwit_za {
+    [[ $# == 3 ]] && kwit_nieszablonowy "$1" "$2" "$3" && return
     yell "Kwit na \"$1\""
-    WYNIK="$WYNIK $2 za $1"
-    #/home/tammo/rdzy/projekty/sprawdzacze/kwit.sh "$REPO" "$1"
+    WYNIK="$WYNIK \"$2\" za $1"
+    kwit "$1"
+}
+
+function czy_kwit_za {
+    read -e -p "Wystawić kwit za $1? t/n, ENTER dla " -i "t" KWIT && [[ ${KWIT^^} == 'T' ]] || [[ ${KWIT^^} == 'TAK' ]] && kwit_za "$2" "$3" "$4" || return 1
 }
 
 function pom {
@@ -37,20 +37,21 @@ function pom {
 function maven_o_projekcie {
     trace "URL, name, desc, coordinates:"
     head -20 pom.xml | egrep "sourceEncoding|name|description|site|url|groupId|artifactId|version"
+    czy_kwit_za "podstawy Mavena" Maven.json -5
 }
 
 function mavena_czas {
     trace UTF8
     if [[ -z $(pom sourceEncoding) ]]; then
-        kwit kwity/UTF8missing.json 1
+        kwit_za UTF8missing.json 1
     fi
     trace kompilator
     if [[ -z $(pom "maven.compiler") ]]; then
-        kwit kwity/compilerNotSet.json -3
+        kwit_za compilerNotSet.json -3
     fi
     mvn test > log
     if (( $? > 1 )); then
-        kwit kwity/MavenLaunchFailed.json -5
+        kwit_za MavenLaunchFailed.json -5
         rm log
         die "Maven się nie odpala!"
     fi
@@ -60,66 +61,67 @@ function mavena_czas {
     rm log
     maven_o_projekcie
     #TODO: punktacja i zapytaj co zrobić
-    ok kwit.sh "$REPO" kwity/Maven.json ALBO kwit.sh "$REPO" kwity/nicePOM.json
+    ok kwit Maven.json ALBO kwit nicePOM.json
 }
 
 function sprawdź_instrukcje_wykonania {
     trace Sprawdzam readme, powinny zostać wypisane paragrafy jakie mogą mieć instrukcje odpalenia:
     README=$(znajdź readme.md)
     grep -iE 'run|launch|uruchom|odpal|wykon' "$README"
-    read -e -p "Wystawić kwit o brak instrukcji odpalenia? t/n, ENTER dla " -i 't' KWIT && [[ ${KWIT^^} == 'T' ]] || [[ ${KWIT^^} == 'TAK' ]] || return
-    kwit kwity/howToRun.json -2
+    czy_kwit_za "brak instrukcji odpalenia" howToRun.json -2 || return
 }
 
-for KAT in */; do
-    trace "$KAT"
-    try cd "$KAT"
-    # case insensitive search
-    if [[ "x$(znajdź readme.md)x" == "xx" ]]; then
-        kwit kwity/noReadme.json -3
-    else
-        sprawdź_instrukcje_wykonania
-    fi
-    echo "=================================================="
-    ok Migawek: "$(git log --oneline | wc -l)"
-    #git shortlog -n > short.log
-    #URL=$(git remote show origin | grep "Fetch URL" | awk '{print $3}')
-    #REPO=${URL:19}
-    REPO="repo"
-    if [[ -f .gitignore ]]; then
-        trace Ignorowane obecnie są: > gi.log
-        git ignored >> gi.log
-        trace .gitignore zawiera: gi.log
-        cat .gitignore >> gi.log
-        ok czy są śmieci w repo?
-        trace git ls-files: >> gi.log
-        git ls-files >> gi.log
-    else
-        kwit kwity/gitignore.json -2
-    fi
-    if [[ -f .gitattributes ]]; then
-        trace ATRYBUTY GITA
-        cat .gitattributes
-    else
-        kwit kwity/gitattr.json -1
-    fi
-    if [[ -f .mailmap ]]; then
-        trace Mapa maili autorów
-        cat .mailmap
-    else
-        kwit kwity/gitmailmap.json -1
-    fi
-    echo "=================================================="
-    if [[ ! -f pom.xml ]]; then
-        #TODO: jak tu dać punktację i jak to pogodzić z wywołaniem funkcji kwit z tego pliku?
-        kwit "Mavenize this project" "pretty please"
-    else
-        mavena_czas
-    fi
-
-    cd ..
-    echo -n; echo -n; echo -n
-    echo "=================================================="
-done
-
-echo RAPORT: $WYNIK
+KAT=$(basename $(pwd))
+trace "$KAT"
+WYNIK="$KAT: "
+# case insensitive search
+if [[ "x$(znajdź readme.md)x" == "xx" ]]; then
+    kwit_za noReadme.json -3
+else
+    WYNIK="$WYNIK +1 za readme"
+    sprawdź_instrukcje_wykonania
+fi
+echo "=================================================="
+MIGAWEK="$(git log --oneline | wc -l)"
+ok Migawek: "$MIGAWEK"
+WYNIK="$WYNIK Migawek $MIGAWEK"
+git shortlog -n
+czy_kwit_za "Kiepską ilosć / jakość migawek?" gitShouldTellAStory.json -4
+czy_kwit_za "Dobre migawki" gitNiceStory.json 4
+if [[ -f .gitignore ]]; then
+    WYNIK="$WYNIK +1 za .gitignore"
+    trace Ignorowane obecnie są:
+    git ignored
+    trace .gitignore zawiera:
+    cat .gitignore
+    ok czy są śmieci w repo?
+    trace git ls-files:
+    git ls-files | grep -e 'class|target|iml|jar'
+    czy_kwit_za "śmieci w repo" "Trash in repo despite .gitignore" "Use \`git-ls-files\` and \`cat .gitignore\` and compare. Stop tracking, commit, push." -1
+    #czy_kwit_za "brak śmieci w repo" "Well done with .gitignore" "No trash in repo found" +1
+else
+    kwit_za gitignore.json -2
+fi
+if [[ -f .gitattributes ]]; then
+    trace ATRYBUTY GITA
+    WYNIK="$WYNIK +1 za .gitattributes"
+    cat .gitattributes
+else
+    kwit_za gitattr.json -1
+fi
+if [[ -f .mailmap ]]; then
+    trace Mapa maili autorów
+    WYNIK="$WYNIK +1 za mapę mejli"
+    cat .mailmap
+else
+    kwit_za gitmailmap.json -1
+fi
+echo "=================================================="
+if [[ ! -f pom.xml ]]; then
+    #TODO: jak tu dać punktację i jak to pogodzić z wywołaniem funkcji kwit z tego pliku?
+    kwit_za "Mavenize this project" "pretty please" -5
+else
+    mavena_czas
+fi
+echo "$WYNIK"
+kwit_za "Mantra w sumie" "$WYNIK" 0

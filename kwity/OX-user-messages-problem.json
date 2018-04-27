@@ -1,0 +1,4 @@
+{
+    "title": "App should clearly instruct what it wants",
+    "body": "With examples of good input and information what happens on bad input. I either entered exactly what it said and got strange result, or got result that was wrong according to what it said, or it looped me without reason - at least perceived one. Something wasn't clear in it's messages."
+}
