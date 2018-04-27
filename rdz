@@ -5,8 +5,8 @@ klonowanie repozytoriów z rozpoznaniem (mapowanie)
     projekt - nazwa
     git clone github/ksywa/repo nazwisko_nazwa
     katalog gdzie mają siedzieć ich projekty bym sobie z innymi porównać
-odpalanie w danym repo obsługuje właśnie to repo
 funkcje pomocnicze do .bashrc i .zshrc albo po prostu .mojeFunkcje i wrzuć je tam
 todo
-punktacja in plus?
 punktacja nie w kwitach przypadkiem?
+mavena podstawy
+czytanie repo po HTTPSie

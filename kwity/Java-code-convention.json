@@ -1,0 +1,4 @@
+{
+    "title": "Java code convention",
+    "body": "Please use Checkstyle and follow Java code convention. This is easily doable from both IDE and Maven and should be the norm."
+}

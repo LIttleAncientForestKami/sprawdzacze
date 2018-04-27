@@ -1,0 +1,4 @@
+{
+    "title": "Validation issue",
+    "body": "I could input bogus data for win-seq length, or stupid and unrealistic board dimensions, or I entered letters where numbers should be entered or Unicode data is not handled.."
+}
