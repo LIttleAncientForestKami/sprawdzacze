@@ -15,22 +15,22 @@ function znajdź {
 
 function kwit_nieszablonowy {
     yell "Kwit $1 za $2"
-    WYNIK="$WYNIK $3 za $1"
-    kwit "$1" "$2"
+    WYNIK="${WYNIK} $3 za $1"
+    yell nieszablonowy_kwit "$1" "$2"
 }
 
 function kwit_za {
     [[ $# == 3 ]] && kwit_nieszablonowy "$1" "$2" "$3" && return
     yell "Kwit na $1"
-    WYNIK="$WYNIK $3 za $1"
-    kwit "$1"
+    WYNIK="${WYNIK} $3 za $1"
+    yell kkkwit "$1"
 }
 
 function czy_kwit_za {
     read -e -p "Wystawić kwit za $1? t/n, ENTER dla " -i "t" KWIT
     if [[ ${KWIT^^} == 'T' ]] || [[ ${KWIT^^} == 'TAK' ]]; then
         shift
-        kwit_za $@
+        kwit_za "$@"
     fi
 }
 
@@ -46,7 +46,7 @@ function maven_o_projekcie {
 
 function mavena_czas {
     trace UTF8
-    if [[ -z $(pom sourceEncoding) ]] && [[ -z $(pom outputEncoding) ]]; then
+    if [[ -z $(pom sourceEncoding) ]] || [[ -z $(pom outputEncoding) ]]; then
         kwit_za UTF8missing.json 1
     else
         kwit_za "UTF-8-ready POM" "hopefully you understand potential issues and why this helps! I may ask you about it later..." 2
@@ -83,18 +83,18 @@ WYNIK="$KAT: "
 if [[ "x$(znajdź readme.md)x" == "xx" ]]; then
     kwit_za noReadme.json -3
 else
-    WYNIK="$WYNIK 1 za readme"
+    WYNIK="${WYNIK} +1 za readme"
     sprawdź_instrukcje_wykonania
 fi
 echo "=================================================="
 MIGAWEK="$(git log --oneline | wc -l)"
 ok Migawek: "$MIGAWEK"
-WYNIK="$WYNIK Migawek $MIGAWEK"
+WYNIK="${WYNIK} Migawek $MIGAWEK"
 git shortlog -n
 czy_kwit_za "Kiepską ilosć / jakość migawek?" gitShouldTellAStory.json -4
 czy_kwit_za "Dobre migawki" gitNiceStory.json 4
 if [[ -f .gitignore ]]; then
-    WYNIK="$WYNIK 1 za .gitignore"
+    WYNIK="${WYNIK} +1 za .gitignore"
     trace Ignorowane obecnie są:
     git ignored
     trace .gitignore zawiera:
@@ -109,21 +109,20 @@ else
 fi
 if [[ -f .gitattributes ]]; then
     trace ATRYBUTY GITA
-    WYNIK="$WYNIK 1 za .gitattributes"
+    WYNIK="${WYNIK} +1 za .gitattributes"
     cat .gitattributes
 else
     kwit_za gitattr.json -1
 fi
 if [[ -f .mailmap ]]; then
     trace Mapa maili autorów
-    WYNIK="$WYNIK 1 za mapę mejli"
+    WYNIK="${WYNIK} +1 za mapę mejli"
     cat .mailmap
 else
     kwit_za gitmailmap.json -1
 fi
 echo "=================================================="
 if [[ ! -f pom.xml ]]; then
-    #TODO: jak tu dać punktację i jak to pogodzić z wywołaniem funkcji kwit z tego pliku?
     kwit_za "Mavenize this project" "pretty please" -5
 else
     mavena_czas

@@ -1,0 +1,4 @@
+{
+    "title": "No run.sh",
+    "body": "Having a script to run your program makes it easy to launch, test and demo. It also allows you to practice your Bash-Fu. Having it named `run.sh` makes it easy for me to grade. Finally, it gives you options to handle few things prior to launching your app, like input params"
+}
