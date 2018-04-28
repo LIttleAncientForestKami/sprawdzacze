@@ -1,0 +1,4 @@
+{
+    "title": "TestNG has soft assertions",
+    "body": "Why not use it instead of having multiple assert in a test? Or do you want the first failure to prevent other asserts from being executed?"
+}

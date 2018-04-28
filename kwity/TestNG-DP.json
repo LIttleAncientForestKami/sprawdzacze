@@ -1,0 +1,4 @@
+{
+    "title": "TestNG has DataProviders",
+    "body": "and they are awesome for parametrized tests. Have a live template for a method returning static Object array, annotated it with `@DataProvider` and in `@Test` mention it by method name..."
+}

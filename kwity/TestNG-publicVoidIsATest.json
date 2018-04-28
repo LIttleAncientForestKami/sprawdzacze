@@ -1,0 +1,4 @@
+{
+    "title": "Annotate class with @Test",
+    "body": "and every public void method becomes a test, no need to mention `@Test` all the time"
+}

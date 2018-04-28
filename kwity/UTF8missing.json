@@ -1,4 +1,4 @@
 {
     "title": "No encoding (or inssufficient encoding) info set",
-    "body": "UTF-8 info missing, build can be platform-dependent. Remember that there are 3 cases to handle, most basic being `project.build.sourceEncoding`."
+    "body": "UTF-8 info missing, build can be platform-dependent. Remember that there are 2 cases to handle, most basic being `project.build.sourceEncoding`. This [gist](https://gist.github.com/LIttleAncientForestKami/c9b185c123fc97f6022861f645766aa5) may help."
 }
