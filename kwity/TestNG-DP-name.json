@@ -1,0 +1,4 @@
+{
+    "title": "TestNG @DataProvider doesn't need a name",
+    "body": "you can refer to it by method name, no need to have a special name in the `DataProvider` annotation for no reason."
+}
