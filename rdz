@@ -1,3 +1,9 @@
+funkcje pomocnicze do .bashrc i .zshrc albo po prostu .mojeFunkcje i wrzuć je tam
+jq dla xmla?
+mavena podstawy
+czytanie repo po HTTPSie
+
+Odłożone na później - do wycięcia?
 klonowanie repozytoriów z rozpoznaniem (mapowanie)
     lista repo
     klon po liście
@@ -5,9 +11,3 @@ klonowanie repozytoriów z rozpoznaniem (mapowanie)
     projekt - nazwa
     git clone github/ksywa/repo nazwisko_nazwa
     katalog gdzie mają siedzieć ich projekty bym sobie z innymi porównać
-funkcje pomocnicze do .bashrc i .zshrc albo po prostu .mojeFunkcje i wrzuć je tam
-jq dla xmla?
-mavena podstawy
-czytanie repo po HTTPSie
-poprawić punktację w "mantra w sumie"
-    KrzysSroczyk_OX:  +1 za readme  za howToRun.json Migawek 10  za gitNiceStory.json +1 za .gitignore +1 za .gitattributes +1 za mapę mejli 2 za UTF-8-ready POM  za Maven_basics.json
