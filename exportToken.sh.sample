@@ -1,0 +1,6 @@
+#!/bin/bash
+# Secure this. .gitignore, .git/info/exclude
+# GH token for full repo control (priv included) - ONLY repositories though.
+# remove .sample extension after changing the data
+
+TOKEN=-should-be-40-chars-long-
