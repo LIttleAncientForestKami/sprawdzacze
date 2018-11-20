@@ -1,0 +1,97 @@
+:author: Tomasz Borek
+:icons: font
+:source-highlighter: pygments
+= Audyt projektu NAZWA_TUTAJ
+
+Automatyczny, zatem proszę nie oczekiwać niesamowitej głębi.
+
+== Spis treści
+
+. Czy to w ogóle działa?
+. Git
+. Maven
+. Testy
+. Obiektowość
+
+== Działanie
+
+Program, który nie działa, nie można go uruchomić, nie przechodzą testy itp. to program, na który nie powinno się tracić czasu.
+
+Absolutna podstawa, by rozmawiać, to:
+
+. Mavenowy projekt, by móc testować budowę
+. udane zbudowanie programu (bez błędów)
+. posiadanie pewnego pokrycia kodu testami (niniejszy audyt nie weryfikuje tego)
+
+Programy, które nie przeszły dwu pierwszych punktów nie będą miały wypełnionych danych.
+
+=== Mój program?
+
+include::porażka.adoc[tag=powód]
+
+[source, log]
+----
+include::mvn.log[Log z budowy programu, jego brak sugeruje problem z audytem]
+----
+
+==  Git
+
+.Migawki, via `git shortlog -sn`
+include::shortlog.txt[]
+
+Jeśli powyżej jakiś użytkownik występuje więcej niż raz, polecam dodanie do projektu pliku `.mailmap`. Więcej: `git help shortlog` i tam `/mailmap`.
+
+[NOTE]
+.Plik `.gitignore` a śmieci w repo?
+[source, log]
+----
+include::gi.txt[]
+----
+
+== Obiektowość
+
+Obiektowość :: wg autora terminu, to głównie przekaz wiadomości i enkapsulacja (i możliwie najpóźniejsze wiązania metod z ich wywołaniami, o czym później). Obiekty przekazują wiadomości, wykonując dla siebie pracę. 
+
+Przekaz wiadomości i późne wiązania to współpraca obiektów poprzez interfejsy i metody, jak również polimorfizm.
+
+Kluczem dla enkapsulacji jest 
+
+1. dobra pakietyzacja: unikanie pakietów technicznych, preferowane są pakiety skoncentrowane wokół funkcjonalności.
+2. odwzorowanie konceptów w obiektach
+3. unikanie anemicznych modeli: klas posiadających pola i metody setX i getX, bez prawdziwej logiki, modele te prowadzą do wybebeszania stanu obiektów, czyli rzecz przeciwną enkapsulacji
+4. wykorzystanie domyślnego specyfikatora dostępu, czyli **pakietowego** - mało metod i klas **publicznych** czy **chronionych**
+5. unikanie pociągów, czyli ciągów wywołań metod trawersujących coraz to głębiej w kolejne obiekty
+
+Poniżej prezentuję mapy pakietów i klas, stworzonych na podstawie wywołań publicznych i chronionych API z głównego pakietu Twojego kodu.
+
+=== Pakiety
+
+Pakiety tu prezentowane nie pokazują zależności między sobą.
+
+.Mapa pakietów
+image::sfdp-mp.png[Mapa pakietów]
+
+.Tabelaryczny układ
+image::osage-mp.png[Tabelaryczna mapa pakietów]
+
+=== Klasy
+
+Poniższy graf prezentuje klasy we wzajemnych zależnościach. Bierzemy pod uwagę połączenia publiczne i chronione, połączenia wewnątrz-pakietowe nie są widoczne na poniższych obrazach. Innymi słowy, im mniej połączeń, tym lepiej.
+
+.Mapa klas
+image::sfdp-mc.png[Mapa klas]
+
+.Tabelaryczny układ
+image::osage-mc.png[Tabelaryczna mapa klas]
+
+[TIP]
+.Ile w ogóle miałem klas?
+======
+Cieszę się, że pytasz!
+
+[source, log]
+----
+include::klasy.log[]
+----
+
+======
