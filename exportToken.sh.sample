@@ -1,6 +1,8 @@
 #!/bin/bash
 # Secure this. .gitignore, .git/info/exclude
 # GH token for full repo control (priv included) - ONLY repositories though.
+# GL token has 3 possible scopes: API is the one I think
 # remove .sample extension after changing the data
 
-TOKEN=-should-be-40-chars-long-
+GL_TOKEN=-20-chars-long-
+GH_TOKEN=-should-be-40-chars-long-
