@@ -1,3 +1,10 @@
+sprawdzian - główny skrypt odpalający całą resztę
+CLI do sprawdzeń różnych rzeczy
+komendy dla niego
+zintegrować z gh i gl
+więcej sprawdzeń
+przerobić na działanie dla jednego repo
+
 funkcje pomocnicze do .bashrc i .zshrc albo po prostu .mojeFunkcje i wrzuć je tam
 jq dla xmla?
 mavena podstawy
@@ -11,3 +18,12 @@ klonowanie repozytoriów z rozpoznaniem (mapowanie)
     projekt - nazwa
     git clone github/ksywa/repo nazwisko_nazwa
     katalog gdzie mają siedzieć ich projekty bym sobie z innymi porównać
+
+Bezpieka:
+    Never commit secrets to Git repositories
+    secrets.epam.com, HashiCorp Vault, etc. Encrypt secrets.
+    Everything should be encrypted both in transit and at rest. 
+    Inject secrets via an environment variable into your app.
+    Change default settings (username, password, port)
+    No passwords via email/chat
+    CI/D/P

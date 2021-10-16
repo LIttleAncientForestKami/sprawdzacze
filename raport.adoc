@@ -1,21 +1,17 @@
 :author: Tomasz Borek
+:toc:
+:toc-title: Spis Treści
 :icons: font
 :source-highlighter: pygments
+:a: ATRYBUTY_TUTAJ
+:b:
 = Audyt projektu NAZWA_TUTAJ
 
 Automatyczny, zatem proszę nie oczekiwać niesamowitej głębi.
 
-== Spis treści
-
-. Czy to w ogóle działa?
-. Git
-. Maven
-. Testy
-. Obiektowość
-
 == Działanie
 
-Program, który nie działa, nie można go uruchomić, nie przechodzą testy itp. to program, na który nie powinno się tracić czasu.
+Program, który nie działa, którego nie można go uruchomić, gdzie nie przechodzą testy itp. to program, na który nie powinno się tracić czasu.
 
 Absolutna podstawa, by rozmawiać, to:
 
@@ -25,19 +21,25 @@ Absolutna podstawa, by rozmawiać, to:
 
 Programy, które nie przeszły dwu pierwszych punktów nie będą miały wypełnionych danych.
 
-=== Mój program?
+ifdef::porażka[WARNING: {porażka}]
 
-include::porażka.adoc[tag=powód]
-
+ifdef::budowa[]
 [source, log]
 ----
-include::mvn.log[Log z budowy programu, jego brak sugeruje problem z audytem]
+include::spr_mvn.tmplog[Log z budowy programu, jego brak sugeruje problem z audytem]
 ----
+endif::budowa[]
+
+ifeval::["{a}"=="ATRYBUTY_TUTAJ"]
+. POM jest
+. testy przeszły
+. budowa udana, bez ostrzeżeń czy błędów
+
 
 ==  Git
 
 .Migawki, via `git shortlog -sn`
-include::shortlog.txt[]
+include::spr_giShortLog.tmplog[]
 
 Jeśli powyżej jakiś użytkownik występuje więcej niż raz, polecam dodanie do projektu pliku `.mailmap`. Więcej: `git help shortlog` i tam `/mailmap`.
 
@@ -45,7 +47,7 @@ Jeśli powyżej jakiś użytkownik występuje więcej niż raz, polecam dodanie 
 .Plik `.gitignore` a śmieci w repo?
 [source, log]
 ----
-include::gi.txt[]
+include::spr_gi.tmplog[nie znaleziono śmieci w repo]
 ----
 
 == Obiektowość
@@ -69,20 +71,20 @@ Poniżej prezentuję mapy pakietów i klas, stworzonych na podstawie wywołań p
 Pakiety tu prezentowane nie pokazują zależności między sobą.
 
 .Mapa pakietów
-image::sfdp-mp.png[Mapa pakietów]
+#image::sfdp-mp.png[Mapa pakietów]
 
 .Tabelaryczny układ
-image::osage-mp.png[Tabelaryczna mapa pakietów]
+#image::osage-mp.png[Tabelaryczna mapa pakietów]
 
 === Klasy
 
 Poniższy graf prezentuje klasy we wzajemnych zależnościach. Bierzemy pod uwagę połączenia publiczne i chronione, połączenia wewnątrz-pakietowe nie są widoczne na poniższych obrazach. Innymi słowy, im mniej połączeń, tym lepiej.
 
 .Mapa klas
-image::sfdp-mc.png[Mapa klas]
+#image::sfdp-mc.png[Mapa klas]
 
 .Tabelaryczny układ
-image::osage-mc.png[Tabelaryczna mapa klas]
+#image::osage-mc.png[Tabelaryczna mapa klas]
 
 [TIP]
 .Ile w ogóle miałem klas?
@@ -91,7 +93,8 @@ Cieszę się, że pytasz!
 
 [source, log]
 ----
-include::klasy.log[]
+include::spr_klasy.tmplog[Brak klas tutaj sugeruje problem z audytem]
 ----
 
 ======
+endif::[]
