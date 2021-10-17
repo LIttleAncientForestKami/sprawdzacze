@@ -3,6 +3,7 @@
 :toc-title: Spis Treści
 :icons: font
 :source-highlighter: pygments
+:figure-caption: Rysunek
 :a: ATRYBUTY_TUTAJ
 :b:
 = Audyt projektu NAZWA_TUTAJ
@@ -19,22 +20,27 @@ Absolutna podstawa, by rozmawiać, to:
 . udane zbudowanie programu (bez błędów)
 . posiadanie pewnego pokrycia kodu testami (niniejszy audyt nie weryfikuje tego)
 
-Programy, które nie przeszły dwu pierwszych punktów nie będą miały wypełnionych danych.
+Programy, które nie przeszły dwu pierwszych punktów nie będą ocenione.
 
 ifdef::porażka[WARNING: {porażka}]
 
 ifdef::budowa[]
+.{budowa}
 [source, log]
 ----
-include::spr_mvn.tmplog[Log z budowy programu, jego brak sugeruje problem z audytem]
+include::spr_mvn.tmplog[Log z budowy programu, zawiera ostrzeżenia i gorzej]
 ----
+NOTE: Jeśli powyższe jest puste - to dobrze!
 endif::budowa[]
 
 ifeval::["{a}"=="ATRYBUTY_TUTAJ"]
 . POM jest
 . testy przeszły
-. budowa udana, bez ostrzeżeń czy błędów
+. budowa udana, bez błędów, choć niekoniecznie bez ostrzeżeń 
 
+TIP: Można rozmawiać (aczkolwiek trzeba sprawdzić testy).
+
+<<<
 
 ==  Git
 
@@ -52,7 +58,7 @@ include::spr_gi.tmplog[nie znaleziono śmieci w repo]
 
 == Obiektowość
 
-Obiektowość :: wg autora terminu, to głównie przekaz wiadomości i enkapsulacja (i możliwie najpóźniejsze wiązania metod z ich wywołaniami, o czym później). Obiekty przekazują wiadomości, wykonując dla siebie pracę. 
+Obiektowość :: wg autora terminu, to głównie przekaz wiadomości i enkapsulacja (i możliwie najpóźniejsze wiązania metod z ich wywołaniami). Obiekty przekazują wiadomości, wykonując dla siebie pracę. 
 
 Przekaz wiadomości i późne wiązania to współpraca obiektów poprzez interfejsy i metody, jak również polimorfizm.
 
@@ -70,21 +76,42 @@ Poniżej prezentuję mapy pakietów i klas, stworzonych na podstawie wywołań p
 
 Pakiety tu prezentowane nie pokazują zależności między sobą.
 
+CAUTION: Brak obrazków oznacza, że było za mało do analizowania.
+
 .Mapa pakietów
-#image::sfdp-mp.png[Mapa pakietów]
+image::sfdp-mp.png[Mapa pakietów]
 
 .Tabelaryczny układ
-#image::osage-mp.png[Tabelaryczna mapa pakietów]
+image::osage-mp.png[Tabelaryczna mapa pakietów]
+
+[TIP]
+.Komenda `jdeps`
+====
+Grafy w tym raporcie powstają dwuetapowo. Wpierw używam `jdeps` by zdobyć informację o zależnościach.
+
+Te informacje zapisuję w języku _Dot_, który służy do kreślenia grafów. Potem używam narzędzi z `graphviz`, czyli programu do wizualizacji grafów, rozumiejącego wspomniany język.
+
+Zasoby, jakie mogą się Wam przydać:
+
+. jdeps
+.. https://gist.github.com/vaskoz/6018520[Gist z krótkim wpro do `jdeps`]
+.. https://nipafx.dev/jdeps-tutorial-analyze-java-project-dependencies/[Wyśmienity opis narzędzia i jak go użyć] 
+.. https://docs.oracle.com/en/java/javase/15/docs/specs/man/jdeps.html[Oficjalna dokumentacja narzędzia]
+. http://dreampuf.github.io/GraphvizOnline/#digraph%20%22ox.jar%22%20%7B%0A%20%20%20%20%2F%2F%20Path%3A%20target%2Fox.jar%0A%20%20%20%22com.epam.jap.ox.AbstractGameFactory%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.Game%22%3B%0A%20%20%20%22com.epam.jap.ox.game.Board%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.Direction%22%3B%0A%20%20%20%22com.epam.jap.ox.game.Board%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.board.Piece%22%3B%0A%20%20%20%22com.epam.jap.ox.game.Game%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.Config%22%3B%0A%20%20%20%22com.epam.jap.ox.game.Game%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.ui.InputReader%22%3B%0A%20%20%20%22com.epam.jap.ox.game.Game%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.ui.OutputPrinter%22%3B%0A%20%20%20%22com.epam.jap.ox.game.WinnerChecker%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.board.Piece%22%3B%0A%20%20%20%22com.epam.jap.ox.game.board.MapBoard%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.Board%22%3B%0A%20%20%20%22com.epam.jap.ox.game.board.MapBoard%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.Direction%22%3B%0A%20%20%20%22com.epam.jap.ox.game.board.MapBoard%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.board.Piece%22%3B%0A%20%20%20%22com.epam.jap.ox.game.config.FileConfig%22%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.Config%22%3B%0A%20%20%20%22com.epam.jap.ox.game.helper.DirectionFlipper%22%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.Direction%22%3B%0A%20%20%20%22com.epam.jap.ox.game.helper.InputValidator%22%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.board.Piece%22%3B%0A%20%20%20%22com.epam.jap.ox.game.helper.InputValidator%22%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.ui.InputReader%22%3B%0A%20%20%20%22com.epam.jap.ox.game.helper.InputValidator%22%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.ui.OutputPrinter%22%3B%0A%20%20%20%22com.epam.jap.ox.game.helper.PieceSwapper%22%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.board.Piece%22%3B%0A%20%20%20%22com.epam.jap.ox.game.language.LanguageResource%22%20%20%20-%3E%20%22com.epam.jap.ox.game.Language%22%3B%0A%20%20%20%22com.epam.jap.ox.game.players.Players%22%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.board.Piece%22%3B%0A%20%20%20%22com.epam.jap.ox.game.players.Players%22%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.players.Player%22%3B%0A%20%20%20%22com.epam.jap.ox.game.players.Players%22%20%20%20%20%20%20%20%20%20%20%20%20%20-%3E%20%22com.epam.jap.ox.game.players.UnableToFindPlayerException%22%3B%0A%7D[Przykładowy diagram OX na stronie GraphViz Online]
+. http://www.webgraphviz.com/[GraphViz w internecie, kreślenie diagramów w przeglądarce]
+====
 
 === Klasy
 
 Poniższy graf prezentuje klasy we wzajemnych zależnościach. Bierzemy pod uwagę połączenia publiczne i chronione, połączenia wewnątrz-pakietowe nie są widoczne na poniższych obrazach. Innymi słowy, im mniej połączeń, tym lepiej.
 
+CAUTION: Brak obrazków oznacza, że było za mało do analizowania.
+
 .Mapa klas
-#image::sfdp-mc.png[Mapa klas]
+image::sfdp-mc.png[Mapa klas]
 
 .Tabelaryczny układ
-#image::osage-mc.png[Tabelaryczna mapa klas]
+image::osage-mc.png[Tabelaryczna mapa klas]
 
 [TIP]
 .Ile w ogóle miałem klas?

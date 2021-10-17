@@ -3,12 +3,6 @@
 # exit 2 - podano zły parametr nazwa lub go nie podano
 # exit 3 - audyt zakończony porażką: nie powiodły się potrzebne sprawdzenia i kończymy raportowanie
 
-# błędy kompilacji i nie przechodzące testy == porażka
-# ostrzeżenia - tylko ujemne punkty
-# raport z błędami w obu wypadkach
-# TODO: przerobić na skrypt działający na jednym katalogu
-# sprzątanie po sobie?
-
 # pliki tymczasowe nazywają się
 PREFIX="spr"
 EXT="tmplog"
@@ -17,7 +11,8 @@ GIS="$PREFIX"_giShortLog."$EXT"
 GIL="$PREFIX"_giLog."$EXT"
 MVN="$PREFIX"_mvn."$EXT"
 KLA="$PREFIX"_klasy."$EXT"
-set -x
+#DEBUG?
+#set -x
 
 function notka() { echo "$(tput setaf 4)$0: $*$(tput sgr0)" >&2; }
 function uwaga() { echo "$(tput setab 7)$(tput setaf 1)$(tput bold)$0: $*$(tput sgr0)" >&2; }
@@ -37,7 +32,8 @@ function brak_nazwy_wychodzę() {
 
 function porażka() {
     sed -i "s/:a: ATRYBUTY_TUTAJ/:porażka: $1/" $RAPORT
-    asciidoctor-pdf $RAPORT
+    asciidoctor-pdf $RAPORT -o porażka.pdf
+    mupdf porażka.pdf
     exit 3
 }
 
@@ -58,17 +54,63 @@ function spr_gi() {
 
 function budujemy() {
     notka mvnci, bez logów, także tych z testów
-    mvn -l $MVN clean install -Dmaven.test.redirectTestOutputToFile=true
+    mvn -l $MVN clean install -Dorg.slf4j.simpleLogger.defaultLogLevel=warn -Dmaven.test.redirectTestOutputToFile=true
     if [[ "$?" -gt 0 ]]; then
-        uwaga """.Błędy kompilacji:
-        ----
-        $(cat $MVN)
-        ----
-        """
+        echo """.Zapis z budowy (błędy kompilacji, enforcer, inne):
+----
+$(cat $MVN)
+----
+""" >> $RAPORT
+        uwaga "Błędy kompilacji? Enforcer? Testy? Inne? Kończę pracę"
         porażka "podczas budowy wystąpiły błędy. Spójrz na zapis z budowy."
+    else
+        notka "Budowa udana! Ale mogą być ostrzeżenia..."
+        if [[ $(wc -l $MVN) > 0 ]]; then
+            sed -i 's/:b:/:budowa: Ostrzeżenia podczas budowy/' $RAPORT
+        else
+            notka "Ostrzeżeń nie było, budowa udana"
+        fi
     fi
 }
 
+function czyszczenie_oxjar_w_dotach() {
+    notka "Czyszczę pliki .dot z nazwy JARa"
+    for f in *.dot; do
+        sed -i 's/ (ox.jar)//' $f
+    done
+}
+
+function mapa_pakietów() {
+    notka Mapa pakietów
+    BAZA=$(ls src/main/java)
+    jdeps -apionly -R -e "$BAZA"'.*' -dotoutput . target/*.jar
+    czyszczenie_oxjar_w_dotach
+    for d in *.dot; do
+        if [[ "$d" = "summary.dot" ]]; then
+            continue 
+        fi
+        sfdp -Grotate=90 -Tpng "$d" -o sfdp-mp.png
+        osage -Tpng "$d" -o osage-mp.png
+    done
+}
+
+function mapa_klas() {
+    notka Mapa klas
+    jdeps -apionly -verbose:class -R -e "$BAZA"'.*' -dotoutput . target/*.jar
+    czyszczenie_oxjar_w_dotach
+    for d in *.dot; do
+        if [[ "$d" = "summary.dot" ]]; then
+            continue
+        fi
+        sfdp -Grotate=90 -Tpng "$d" -o sfdp-mc.png
+        osage -Tpng "$d" -o osage-mc.png
+    done
+}
+
+function ile_klas(){
+    notka Ile klas tu mamy?
+    find src/main/java -iname "*.java" > $KLA
+}
 
 NAZWA=$1
 brak_nazwy_wychodzę
@@ -93,28 +135,13 @@ if [[ -f .gitignore ]]; then
 else 
     echo "Brak .gitignore - zdecydowanie oznaka złej higieny projektu" > $GIG
 fi
-#echo Mapa pakietów
-#BAZA=$(ls src/main/java)
-#jdeps -apionly -R -e "$BAZA"'.*' -dotoutput . target/*.jar
-#for d in *.dot; do
-#    if [[ "$d" = "summary.dot" ]]; then
-#        exit 3
-#    fi
-#    sfdp -Grotate=90 -Tpng "$d" -o sfdp-mp.png
-#    osage -Tpng "$d" -o osage-mp.png
-#done
-#echo Mapa klas
-#jdeps -apionly -verbose:class -R -e "$BAZA"'.*' -dotoutput . target/*.jar
-#for d in *.dot; do
-#    if [[ "$d" = "summary.dot" ]]; then
-#        exit 3
-#    fi
-#    sfdp -Grotate=90 -Tpng "$d" -o sfdp-mc.png
-#    osage -Tpng "$d" -o osage-mc.png
-#done
-#cd src/main/java || exit 1
-notka Ile klas tu mamy?
-find src/main/java -iname "*.java" > $KLA #../../../klasy.log
+
+mapa_pakietów
+
+mapa_klas
+
+ile_klas
+
 notka "Raport do PDFa i sprzątanie"
 asciidoctor-pdf $RAPORT -o raport.pdf
 #rm spr_*
